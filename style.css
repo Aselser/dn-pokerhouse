@@ -117,6 +117,7 @@ table.day.highlight {
 }
 table.day.highlight td { border-top-color: rgba(243, 217, 122, 0.25); }
 table.day.dimmed { opacity: 0.32; }
+table.day.day-hidden { display: none; }
 
 table.day td {
   padding: 4px 6px;

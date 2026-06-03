@@ -141,37 +141,49 @@ async function downloadImage() {
 async function downloadAll() {
   setButtons(true);
   const tables = Array.from(daysEl.querySelectorAll("table.day"));
+  const total = 1 + tables.length * 2;
+  let n = 0;
+  const clear = () => tables.forEach((t) => t.classList.remove("highlight", "dimmed", "day-hidden"));
   try {
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
     const zip = new JSZip();
 
-    // 1) Imagen sin remarcar
-    setStatus("Generando imagen 1/" + (tables.length + 1) + "…");
-    let blob = await canvasToBlob(await capture());
-    zip.file("00-completa.png", blob);
+    // 1) Imagen completa, sin remarcar
+    setStatus("Generando imagen " + (++n) + "/" + total + "…");
+    zip.file("00-completa.png", await canvasToBlob(await capture()));
 
-    // 2) Una por día con el borde resaltado
+    // 2) Una por día, con el borde resaltado (resto atenuado)
     for (let i = 0; i < tables.length; i++) {
-      setStatus("Generando imagen " + (i + 2) + "/" + (tables.length + 1) + "…");
+      setStatus("Generando imagen " + (++n) + "/" + total + "…");
       tables.forEach((t, j) => {
         t.classList.toggle("highlight", j === i);
         t.classList.toggle("dimmed", j !== i);
+        t.classList.remove("day-hidden");
       });
-      blob = await canvasToBlob(await capture());
-      const d = currentDays[i];
-      const name = String(i + 1).padStart(2, "0") + "-" + slug(d.dayName) + ".png";
-      zip.file(name, blob);
+      const name = String(i + 1).padStart(2, "0") + "-" + slug(currentDays[i].dayName) + ".png";
+      zip.file(name, await canvasToBlob(await capture()));
     }
 
-    tables.forEach((t) => t.classList.remove("highlight", "dimmed"));
+    // 3) Una por día, mostrando solo ese día (con header y footer)
+    for (let i = 0; i < tables.length; i++) {
+      setStatus("Generando imagen " + (++n) + "/" + total + "…");
+      tables.forEach((t, j) => {
+        t.classList.remove("highlight", "dimmed");
+        t.classList.toggle("day-hidden", j !== i);
+      });
+      const name = "solo-" + String(i + 1).padStart(2, "0") + "-" + slug(currentDays[i].dayName) + ".png";
+      zip.file(name, await canvasToBlob(await capture()));
+    }
+
+    clear();
 
     setStatus("Comprimiendo zip…");
     const content = await zip.generateAsync({ type: "blob" });
     triggerDownload(content, "flyers-dn-pokerhouse.zip");
-    setStatus("Listo: " + (tables.length + 1) + " imágenes descargadas en el zip.");
+    setStatus("Listo: " + total + " imágenes descargadas en el zip.");
   } catch (err) {
     console.error(err);
-    tables.forEach((t) => t.classList.remove("highlight", "dimmed"));
+    clear();
     setStatus("Error al generar las imágenes: " + err.message);
   } finally {
     setButtons(false);
