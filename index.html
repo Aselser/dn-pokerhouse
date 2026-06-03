@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D&N Pokerhouse — Generador de Flyer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="toolbar">
+    <h1>Generador de Flyer — D&amp;N Pokerhouse</h1>
+    <p>Subí el Excel de la programación semanal y descargá la imagen.</p>
+    <div class="controls">
+      <label class="btn">
+        <input type="file" id="fileInput" accept=".xlsx,.xls" hidden />
+        Subir Excel
+      </label>
+      <button class="btn" id="downloadBtn" disabled>Descargar imagen (sin remarcar)</button>
+      <button class="btn" id="downloadAllBtn" disabled>Descargar 8 imágenes (zip)</button>
+      <span id="status" class="status"></span>
+    </div>
+  </header>
+
+  <main>
+    <!-- El flyer que se captura como imagen -->
+    <div id="flyer" class="flyer">
+      <div class="topbar">
+        <div class="suit suit-red">&#9830;</div>
+        <div class="suit suit-dark">&#9827;</div>
+        <div class="title-block">
+          <h2 class="title">PROGRAMACIÓN SEMANAL</h2>
+          <div class="subtitle">D&nbsp;&amp;&nbsp;N&nbsp;&nbsp;&nbsp;P O K E R H O U S E</div>
+        </div>
+        <div class="suit suit-red">&#9829;</div>
+        <div class="suit suit-dark">&#9824;</div>
+      </div>
+
+      <div id="days" class="days">
+        <div class="placeholder">Subí el Excel para generar la programación…</div>
+      </div>
+
+      <div class="bottombar">
+        <div class="bottom-left">
+          <span class="trophy">&#127942;</span>
+          <span class="slogan">COMPETÍ &nbsp;–&nbsp; DISFRUTÁ &nbsp;–&nbsp; GANÁ</span>
+        </div>
+        <div class="bottom-right">
+          <div class="bottom-suits">
+            <span class="suit-mini suit-red">&#9830;</span>
+            <span class="suit-mini suit-gold">&#9827;</span>
+            <span class="suit-mini suit-red">&#9829;</span>
+            <span class="suit-mini suit-gold">&#9824;</span>
+          </div>
+          <div class="bottom-brand">
+            <div class="bb-name">D&nbsp;&amp;&nbsp;N&nbsp;&nbsp;POKERHOUSE</div>
+            <div class="bb-sub">PROFESSIONAL TOURNAMENT</div>
+          </div>
+          <img class="bottom-logo" src="assets/logo.png" alt="D&N Pokerhouse" onerror="this.style.display='none'" />
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="parse.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
